@@ -8,8 +8,10 @@ import {
 import UserActionTypes from './user.types';
 
 import {
-  signInSuccess,
-  signInFailure
+  googleSignInSuccess,
+  googleSignInFailure,
+  emailSignInSuccess,
+  emailSignInFailure
 } from './user.actions';
 
 import { auth,
@@ -22,12 +24,12 @@ export function* signInWithGoogle() {
     const { user } = yield auth.signInWithPopup(googleProvider);
     const userRef = yield call(createUserProfileDocument, user);
     const userSnapshot = yield userRef.get();
-    yield put(signInSuccess({
+    yield put(googleSignInSuccess({
       id: userSnapshot.id,
       ...userSnapshot.data()
     }));
   } catch (error) {
-    yield put(signInFailure(error));
+    yield put(googleSignInFailure(error));
   }
 }
 
@@ -36,12 +38,12 @@ export function* signInWithEmail({payload: { email, password }}) {
     const { user } = yield auth.signInWithEmailAndPassword(email, password);
     const userRef = yield call(createUserProfileDocument, user);
     const userSnapshot = yield userRef.get();
-    yield put(signInSuccess({
+    yield put(emailSignInSuccess({
       id: userSnapshot.id,
       ...userSnapshot.data()
     }));
   } catch (error) {
-    yield put(signInFailure(error));
+    yield put(emailSignInFailure(error));
   }
 }
 
